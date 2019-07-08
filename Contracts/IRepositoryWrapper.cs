@@ -8,7 +8,8 @@ namespace Contracts
     {
         IShopperRepository Shopper { get; }
         IOrderRepository Order { get; }
-
+        IPaymentRepository Payment { get; }
         void Save();
     }   
 }
+

@@ -1,13 +1,22 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:52306",
       "sslPort": 44306
     }
   },
+  "Logging": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    },
+  "mysqlconnection": {
+      "connectionString": "server=localhost;userid=root;password=yourpass;database=accountowner;"
+    },
+  "AllowedHosts": "*",
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
