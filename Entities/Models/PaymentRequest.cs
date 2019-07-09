@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    class PaymentRequest
+    public class PaymentRequest
     {
         int id { get; set; }
         int merchantId { get; set; }

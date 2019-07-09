@@ -9,8 +9,16 @@ namespace Repository
 {
     public class PaymentRepository : RepositoryBase<Payment>, IPaymentRepository
     {
+
         public PaymentRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
+            
+        }
+
+        public IEnumerable<Payment> GetAllPayments()
+        {
+            IEnumerable<Payment> payments = FindAll();
+            return payments;
         }
 
         public bool ProcessPayment(Order order)
@@ -18,9 +26,6 @@ namespace Repository
             throw new NotImplementedException();
         }
 
-        public IList<Payment> RetrievePaymentDetails()
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }

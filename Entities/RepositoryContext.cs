@@ -10,7 +10,7 @@ namespace Entities
         }
          DbSet<Shopper> Shoppers { get; set; }
          DbSet<Order> Orders { get; set; }
-         DbSet<Payment> Payments { get; set; }
+         DbSet<Payment> Payment { get; set; }
        
        
     }
