@@ -6,10 +6,10 @@ namespace Entities.Models
 {
     public class PaymentRequest
     {
-        int id { get; set; }
-        int merchantId { get; set; }
-        int shopperId { get; set; }
-        PaymentCardDetails paymentCardDetails { get; set; }
-        decimal amount { get; set}
+        public int id { get; set; }
+        public int merchantId { get; set; }
+        public Order Order { get; set; }
+        
+
     }
 }

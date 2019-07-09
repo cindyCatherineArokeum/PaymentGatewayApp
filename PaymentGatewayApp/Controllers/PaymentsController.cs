@@ -7,6 +7,8 @@ using Entities.Models.Enumerations;
 using Microsoft.AspNetCore.Mvc;
 using Entities.Models;
 using System.Net.Http;
+using Newtonsoft.Json;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,7 +19,9 @@ namespace PaymentGatewayApp
     {
         private ILoggerManager _logger;
         private IRepositoryWrapper _repository;
-        static HttpClient client = new HttpClient();
+
+   
+
         public PaymentsController(ILoggerManager logger, IRepositoryWrapper repository)
         {
             _logger = logger;
@@ -30,6 +34,41 @@ namespace PaymentGatewayApp
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
+        }
+
+        [HttpGet("findPreviousPayment/{shopperId}/{PaymentDate}")]
+    
+        public IQueryable<Payment> GetPreviousPayment([FromRoute] int shopperId, [FromRoute] string PaymentDate)
+        {
+            IQueryable < Payment > paymentHistory = null;
+            //find orders for a specific shoppe 
+           
+            if (shopperId != 0)
+            {
+          
+                IQueryable<Order> ordersList = _repository.Order.FindByCondition(o => o.shopperID == shopperId);
+
+                if (ordersList.Count() != 0)
+                {
+                    foreach (Order order in ordersList)
+                    {
+                        //For each order, retrieve payment
+                        paymentHistory = _repository.Payment.FindByCondition(payment => payment.OrderId == order.id);
+     
+                    }
+
+                }
+            }
+            if (PaymentDate != null)
+            {
+                paymentHistory = _repository.Payment.FindByCondition(payment => payment.PaymentDate.Equals(PaymentDate));
+            }
+
+            //Else, get all payments
+            paymentHistory = _repository.Payment.FindAll();
+
+
+            return paymentHistory;
         }
 
         // GET api/<controller>/5
@@ -57,27 +96,44 @@ namespace PaymentGatewayApp
         {
         }
 
-        static async Task<Uri> ProcessPaymentAsync(PaymentRequest paymentRequest)
+        public async Task<HttpResponseMessage> GetPaymentValidationAsync(PaymentRequest paymentRequest)
         {
-            HttpResponseMessage response = await  
-        }
-        public String ProcessPayment(PaymentRequest paymentRequest)
-        {
-            var response = "response";//call to call acquiring bank
+            ValidationResponse validationResponse = null;
 
-            if (!(response.Equals(BankResponseCodes.Approved )|| !response.Equals(BankResponseCodes.PartialApproval))){
+            var client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:8080");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                _logger.LogInfo("Please enter a new card, the following error has been encountered:" + response);
-                
-            }
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/acquiringbank", paymentRequest);
+
+            if (response.IsSuccessStatusCode)
             {
-                _repository.Payment.Create();
-                //code to process payment
-                //set payment status to successful 
-                //write to database
+                var data = response.ToString();
+                validationResponse = (ValidationResponse)JsonConvert.DeserializeObject(data);
+                BankResponseCodes bankresponse = validationResponse.responseCode;
+                
+
+
+                if (!(bankresponse.Equals(BankResponseCodes.Approved) || !bankresponse.Equals(BankResponseCodes.PartialApproval)))
+                {
+
+                    _logger.LogInfo("Please enter a new card, the following error has been encountered:" + response);
+                    return response;
+                }
+                { //Process payment is successful
+                    Payment payment = new Payment();
+                    payment.OrderId = paymentRequest.Order.id;
+                    payment.PaymentDate = DateTime.Now;
+                    payment.paid = true;
+
+                    _repository.Payment.Create(payment);
+                }
             }
 
-            return null;
+            return response;
         }
+
+
     }
 }

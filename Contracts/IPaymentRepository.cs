@@ -7,7 +7,6 @@ namespace Contracts
 {
     public interface IPaymentRepository : IRepositoryBase<Payment>
     {
-         bool ProcessPayment(Order order);
          IEnumerable<Payment> GetAllPayments();
     }
 }

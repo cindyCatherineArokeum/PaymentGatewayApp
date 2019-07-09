@@ -21,10 +21,7 @@ namespace Repository
             return payments;
         }
 
-        public bool ProcessPayment(Order order)
-        {
-            throw new NotImplementedException();
-        }
+
 
      
     }

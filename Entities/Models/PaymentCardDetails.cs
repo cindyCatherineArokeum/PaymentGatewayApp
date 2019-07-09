@@ -7,9 +7,9 @@ namespace Entities.Models
    //Details of payment cards are not saved in database because of high sensitivity
     class PaymentCardDetails
     {
-        int id { get; set; }
-        string cardNumber { get; set; }
-        string cvvCode { get; set; }
-        string cardHolderName { get; set; }
+        private int id { get; set; }
+        private string cardNumber { get; set; }
+        private string cvvCode { get; set; }
+        private string cardHolderName { get; set; }
     }
 }

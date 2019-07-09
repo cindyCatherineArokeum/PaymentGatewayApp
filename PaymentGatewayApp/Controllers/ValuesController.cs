@@ -29,19 +29,6 @@ namespace PaymentGatewayApp.Controllers
 
 
 
-        public String ProcessPayment(FromBodyAttribute PaymentRequest)
-        {
-            var response = "response";//call to call acquiring bank
-            
-            if (response == "01")
-            {
-                //code to process payment
-                //set payment status to successful 
-                //write to database
-            }
-
-            return null;
-        }
 
     }
  

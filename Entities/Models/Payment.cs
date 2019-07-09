@@ -14,5 +14,8 @@ namespace Entities.Models
         [ForeignKey("orderFK")]
         public int OrderId { get; set; }
         public DateTime PaymentDate { get; set; }
+        public PaymentRequest paymentRequest;
+
+        public Boolean paid { get; set; }
     }
 }

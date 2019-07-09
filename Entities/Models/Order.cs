@@ -15,12 +15,9 @@ namespace Entities.Models
         [ForeignKey("shopperFK")]
         [Required (ErrorMessage ="An order cannot exist on its own, a shopper ID is required")]
         public int shopperID { get; set; }
-        
-        public int paymentID { get; set; }
-        
         public DateTime orderDate { get; set; }
 
-        public Boolean paid { get; set; }
         public string status { get; set; }
+        public decimal amount { get; set; }
     }
 }
