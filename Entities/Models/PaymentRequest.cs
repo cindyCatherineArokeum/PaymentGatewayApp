@@ -10,5 +10,6 @@ namespace Entities.Models
         int merchantId { get; set; }
         int shopperId { get; set; }
         PaymentCardDetails paymentCardDetails { get; set; }
+        decimal amount { get; set}
     }
 }
